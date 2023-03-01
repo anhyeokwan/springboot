@@ -1,4 +1,4 @@
-package org.zerock.b01;
+package org.zerock.b01.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
