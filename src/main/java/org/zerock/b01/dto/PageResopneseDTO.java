@@ -37,6 +37,7 @@ public class PageResopneseDTO<E> {
         this.size = pageRequestDTO.getSize();
 
         this.total = total;
+        this.dtoList = dtoList;
 
         this.end = (int) (Math.ceil(this.page / 10.0)) * 10; // 화면의 마지막 번호 ceil : 올림
         this.start = this.end - 9; // 화면에서의 시작번호

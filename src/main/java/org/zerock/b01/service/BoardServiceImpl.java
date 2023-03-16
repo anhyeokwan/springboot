@@ -13,7 +13,9 @@ import org.zerock.b01.dto.PageResopneseDTO;
 import org.zerock.b01.repository.BoardRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -26,7 +28,7 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
 
     @Override
-    public Long register(BoardDTO boardDTO) {
+    public long register(BoardDTO boardDTO) {
         Board board = modelMapper.map(boardDTO, Board.class);
 
         long bno = boardRepository.save(board).getBno();
@@ -35,7 +37,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardDTO readOne(Long bno) {
+    public BoardDTO readOne(long bno) {
         Optional<Board> result = boardRepository.findById(bno);
 
         Board board = result.orElseThrow();
@@ -51,7 +53,7 @@ public class BoardServiceImpl implements BoardService{
 
         Board board = result.orElseThrow(); // 예외처리하는 느낌
 
-        board.change(board.getTitle(), board.getContent());
+        board.change(boardDTO.getTitle(), boardDTO.getContent());
 
         boardRepository.save(board);
     }
@@ -69,6 +71,13 @@ public class BoardServiceImpl implements BoardService{
 
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
 
-        return null;
+        List<BoardDTO> dtoList = result.getContent().stream()
+                .map(board -> modelMapper.map(board, BoardDTO.class)).collect(Collectors.toList());
+
+        return PageResopneseDTO.<BoardDTO>withALl()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 }

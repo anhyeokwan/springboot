@@ -7,9 +7,9 @@ import org.zerock.b01.dto.PageResopneseDTO;
 
 public interface BoardService {
 
-    Long register(BoardDTO boardDTO);
+    long register(BoardDTO boardDTO);
 
-    BoardDTO readOne(Long bno);
+    BoardDTO readOne(long bno);
 
     void modify(BoardDTO boardDTO);
 
