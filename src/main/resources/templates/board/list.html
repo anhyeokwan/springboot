@@ -91,7 +91,25 @@
     </div> <!-- end col -->
 
   </div> <!-- end row -->
+
+<div class="modal" tabindex="-1" id="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
+</div> <!-- end layout:fragment -->
 
 <script layout:fragment="script" th:inline="javascript">
 
@@ -113,12 +131,22 @@
     formObj.submit();
   }, false);
 
-  document.querySelector("clearBtn").addEventListener("click", function (e) {
+  document.querySelector(".clearBtn").addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
 
     self.location = '/board/list';
   }, false);
+
+  // show modal
+  const result = [[${result}]];
+
+  const modal = new bootstrap.Modal(document.querySelector(".modal"));
+
+  if (result) {
+    console.log("등록 후 결과창 확인");
+    modal.show();
+  }
 
 </script>
 </html>
