@@ -47,7 +47,7 @@ public class PageRequestDTO {
             stringBuilder.append("page=" + this.page);
             stringBuilder.append("&size=" + this.size);
 
-            if (type != null || type.length() > 0) {
+            if (type != null && type.length() > 0) {
                 stringBuilder.append("&type=" + this.type);
             }
 
@@ -55,7 +55,6 @@ public class PageRequestDTO {
                 try {
                     stringBuilder.append("&keyword=" + URLEncoder.encode(keyword, "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
                 }
 
             }
