@@ -69,9 +69,9 @@ public class BoardController {
 
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO
-                         , @Valid BoardDTO boardDTO
-                         , BindingResult bindingResult
-                         , RedirectAttributes redirectAttributes) {
+            , @Valid BoardDTO boardDTO
+            , BindingResult bindingResult
+            , RedirectAttributes redirectAttributes) {
         log.info("board modify post........" + boardDTO);
 
         if (bindingResult.hasErrors()) {
@@ -89,5 +89,16 @@ public class BoardController {
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
         return "redirect:/board/read";
+    }
+
+    @PostMapping("/remove")
+    public String remove(long bno, RedirectAttributes redirectAttributes){
+        log.info("remove......" + bno);
+
+        boardService.remove(bno);
+
+        redirectAttributes.addFlashAttribute("result", "remove");
+
+        return "redirect:/board/list";
     }
 }
