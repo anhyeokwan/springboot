@@ -16,10 +16,10 @@ import org.zerock.b01.service.BoardService;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping("/board")
-@Log4j2
-@RequiredArgsConstructor
+@Controller // 컨트롤러
+@RequestMapping("/board") // 기본 경로 설정
+@Log4j2 // 로깅
+@RequiredArgsConstructor // autowired를 생성안하게 해주는 어노테이션
 public class BoardController {
 
     private final BoardService boardService;

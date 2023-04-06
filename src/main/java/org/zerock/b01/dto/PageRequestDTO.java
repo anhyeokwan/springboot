@@ -48,7 +48,7 @@ public class PageRequestDTO {
             stringBuilder.append("&size=" + this.size);
 
             if (type != null && type.length() > 0) {
-                stringBuilder.append("&type=" + this.type);
+                stringBuilder.append("type=" + this.type);
             }
 
             if (keyword != null) {

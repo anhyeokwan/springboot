@@ -2,6 +2,7 @@ package org.zerock.b01.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -9,8 +10,10 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.domain.QBoard;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch {
 
     public BoardSearchImpl(){
@@ -49,6 +52,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     public Page<Board> searchAll(String[] types, String keyword, Pageable pageable){
         QBoard board = QBoard.board;
         JPQLQuery<Board> query = from(board);
+
+        log.info("보드 서치 임플 : " + Arrays.toString(types) + ", " + keyword);
 
         if((types != null && types.length > 0) && keyword != null){
 
