@@ -5,11 +5,14 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Reply", indexes = {
+        @Index(name = "idx_reply_board_bno", columnList = "board_bno")
+}) // 추가된 어노테이션
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "board")
+@ToString // exclude 제거 (exclude = "board")
 public class Reply extends BaseEntity {
 
     @Id
