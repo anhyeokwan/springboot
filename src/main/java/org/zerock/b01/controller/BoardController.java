@@ -2,6 +2,7 @@ package org.zerock.b01.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.b01.dto.BoardDTO;
+import org.zerock.b01.dto.BoardListReplyCountDTO;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResopneseDTO;
 import org.zerock.b01.service.BoardService;
@@ -26,7 +28,9 @@ public class BoardController {
 
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResopneseDTO<BoardDTO> resopneseDTO = boardService.list(pageRequestDTO);
+//        PageResopneseDTO<BoardDTO> resopneseDTO = boardService.list(pageRequestDTO);
+
+        PageResopneseDTO<BoardListReplyCountDTO> resopneseDTO = boardService.listWithReplyCount(pageRequestDTO);
 
         log.info("resopneseDTO : " + resopneseDTO);
 
