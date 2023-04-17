@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.b01.dto.RelpyDTO;
+import org.zerock.b01.service.ReplyService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor // 의존성 주입을 위한
 @Log4j2
 @RequestMapping("/replies")
 public class ReplyController {
+
+    private final ReplyService replyService;
 
     @ApiOperation(value = "Replies POST", notes = "POST 방식으로 댓글등록")
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +38,9 @@ public class ReplyController {
         }
 
         Map<String, Long> resultMap = new HashMap<>(); // Map.of는 put 같은 느낌
-        resultMap.put("rno", 111L);
+        long rno = replyService.register(relpyDTO);
+
+        resultMap.put("rno", rno);
 
         return resultMap;  // ResponseEntity.ok(resultMap) -> 괄호안에 있는 맵을 ResponseEntity에 담는다
     }
