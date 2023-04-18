@@ -7,10 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.zerock.b01.dto.PageRequestDTO;
+import org.zerock.b01.dto.PageResopneseDTO;
 import org.zerock.b01.dto.RelpyDTO;
 import org.zerock.b01.service.ReplyService;
 
@@ -43,5 +42,49 @@ public class ReplyController {
         resultMap.put("rno", rno);
 
         return resultMap;  // ResponseEntity.ok(resultMap) -> 괄호안에 있는 맵을 ResponseEntity에 담는다
+    }
+
+    @ApiOperation(value = "Replies of Board", notes = "GET 방식으로 특정 게시물의 댓글 목록")
+    @GetMapping(value = "/list/{bno}")
+    public PageResopneseDTO<RelpyDTO> getList(@PathVariable("bno") long bno, PageRequestDTO pageRequestDTO) {
+        PageResopneseDTO<RelpyDTO> resopneseDTO = replyService.getListOfBoard(bno, pageRequestDTO);
+
+        return resopneseDTO;
+    }
+
+    @ApiOperation(value = "Read Reply", notes = "GET 방식으로 특정 댓글 조회")
+    @GetMapping("/{rno}")
+    public RelpyDTO getReplyDTO(@PathVariable("rno") long rno) {
+
+        RelpyDTO relpyDTO = replyService.read(rno);
+
+        return relpyDTO;
+
+    }
+
+    @ApiOperation(value = "Delete Reply", notes = "DELETE 방식으로 특정 댓글 삭제")
+    @DeleteMapping("/{rno}")
+    public Map<String, Long> remove(@PathVariable("rno") long rno) {
+        replyService.remove(rno);
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("rno", rno);
+
+        return resultMap;
+    }
+
+    @ApiOperation(value = "Modify Reply", notes = "PUT 방식으로 특정댓글 수정")
+    @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> modify(@PathVariable("rno") long rno, @RequestBody RelpyDTO relpyDTO) {
+        relpyDTO.setRno(rno);
+
+        replyService.modify(relpyDTO);
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("rno", rno);
+
+        return resultMap;
     }
 }
