@@ -28,7 +28,7 @@ public class ReplyRepositoryTests {
 
         Board board = Board.builder().bno(bno).build();
 
-        IntStream.rangeClosed(1, 4).forEach(i -> {
+        IntStream.rangeClosed(9, 50).forEach(i -> {
             Reply reply = Reply.builder()
                     .board(board)
                     .replyText("댓글....." + i)
