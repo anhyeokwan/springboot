@@ -23,3 +23,18 @@ async function addReply(replyObj) {
 
     return response.data;
 }
+
+async function getReply(rno) {
+    const respone = await axios.get(`/replies/${rno}`);
+    return respone.data;
+}
+
+async function modifyReply(replyObj) {
+    const respone = await axios.put(`/replies/${replyObj.rno}`);
+    return respone.data;
+}
+
+async function removeReply(rno) {
+    const respone = await axios.delete(`/replies/${rno}`);
+    return respone.data;
+}
