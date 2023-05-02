@@ -13,6 +13,7 @@ import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -151,6 +152,22 @@ public class BoardRepositoryTests {
         log.info(result.hasPrevious() + ": " + result.hasNext());
 
         result.getContent().forEach(board -> log.info(board));
+    }
+
+    @Test
+    public void testInsertWithImage() {
+        Board board = Board.builder()
+                .title("Image Test")
+                .content("첨부파일 테스트")
+                .writer("test")
+                .build();
+
+        for (int i = 0; i < 3; i++) {
+            board.addImage(UUID.randomUUID().toString(), "file" + i + ".jpg");
+
+        } // end for
+
+        boardRepository.save(board);
     }
 }
 
