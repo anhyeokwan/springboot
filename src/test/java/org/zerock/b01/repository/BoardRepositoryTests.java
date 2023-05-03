@@ -8,9 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 import org.zerock.b01.domain.Board;
+import org.zerock.b01.domain.BoardImage;
 import org.zerock.b01.dto.BoardListReplyCountDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +26,12 @@ public class BoardRepositoryTests {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Test
-    public void testInsert(){
-        IntStream.rangeClosed(1, 100).forEach(i ->{
+    public void testInsert() {
+        IntStream.rangeClosed(1, 100).forEach(i -> {
             Board board = Board.builder()
                     .title("title..." + i)
                     .content("content..." + i)
@@ -38,7 +44,7 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testSelect(){
+    public void testSelect() {
         long bno = 100L;
 
         Optional<Board> result = boardRepository.findById(bno);
@@ -49,7 +55,7 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testUpdate(){
+    public void testUpdate() {
         long bno = 100L;
 
         Optional<Board> result = boardRepository.findById(bno);
@@ -62,14 +68,14 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() {
         long bno = 100L;
 
         boardRepository.deleteById(bno);
     }
 
     @Test
-    public void testPaging(){
+    public void testPaging() {
         //1 page order by bno desc
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
 
@@ -86,7 +92,7 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testSearch1(){
+    public void testSearch1() {
         // 2 Page order by bno desc
         Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
 
@@ -105,7 +111,7 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testSearchAll2(){
+    public void testSearchAll2() {
         String[] types = {"t", "c", "w"};
 
         String keyword = "1";
@@ -130,7 +136,7 @@ public class BoardRepositoryTests {
     }
 
     @Test
-    public void testSearchReplyCount(){
+    public void testSearchReplyCount() {
         String[] types = {"t", "c", "w"};
 
         String keyword = "1";
@@ -168,6 +174,51 @@ public class BoardRepositoryTests {
         } // end for
 
         boardRepository.save(board);
+    }
+
+    @Test
+    public void testReadWithImage() {
+        // 반드시 존재하는 bno로 확인
+        Optional<Board> result = boardRepository.findByIdWithImages(1L);
+
+        Board board = result.orElseThrow();
+
+        log.info(board);
+        log.info("-------------");
+        for (BoardImage boardImage : board.getImageSet()) {
+            log.info(boardImage);
+
+        }
+
+    }
+
+    @Test
+    public void testModifyImages() {
+        Optional<Board> result = boardRepository.findByIdWithImages(1L);
+
+        Board board = result.orElseThrow();
+
+        // 기존의 첨부파일들은 삭제
+        board.clearImages();
+
+        // 새로운 첨부파일들
+        for (int i = 0; i < 2; i++) {
+            board.addImage(UUID.randomUUID().toString(), "updatefile" + i + ".jpg");
+
+        }
+
+        boardRepository.save(board);
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    public void testRemoveAll() {
+        long bno = 1L;
+
+        replyRepository.deleteByBoard_Bno(bno);
+
+        boardRepository.deleteById(bno);
     }
 }
 
