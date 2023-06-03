@@ -41,7 +41,7 @@
 
                         <div class="my-4">
                             <div class="float-end">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
                                 <button type="reset" class="btn btn-secondary">Reset</button>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
         }).catch(e => {
             uploadModal.hide();
         })
-    }, false);
+    });
 
     const uploadResult = document.querySelector(".uploadResult");
 
@@ -152,4 +152,39 @@
 
         uploadResult.innerHTML += str;
     }
+
+    function removeFile(uuid, fileName, obj) {
+        console.log(uuid);
+        console.log(fileName);
+        console.log(obj);
+
+        const tartget = obj.closest(".card");
+
+        removeFileToServer(uuid, fileName).then(data => {
+            tartget.remove()
+        });
+    }
+
+    document.querySelector(".submitBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = document.querySelector(".uploadHidden");
+
+        const uplaodFiles = uploadResult.querySelectorAll("img");
+
+        let str = '';
+
+        for (let i = 0; i < uplaodFiles.length; i++) {
+            const uploadFile = uplaodFiles[i];
+            const imgLink = uploadFile.getAttribute("src");
+
+            str += `<input type='hidden' name='fileName' value="${imgLink}">`;
+        }
+
+        target.innerHTML = str;
+
+        document.querySelector("form").submit();
+
+    }, false);
 </script>

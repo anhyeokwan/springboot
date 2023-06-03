@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResopneseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
 
 import javax.validation.Valid;
@@ -30,7 +27,9 @@ public class BoardController {
     public void list(PageRequestDTO pageRequestDTO, Model model) {
 //        PageResopneseDTO<BoardDTO> resopneseDTO = boardService.list(pageRequestDTO);
 
-        PageResopneseDTO<BoardListReplyCountDTO> resopneseDTO = boardService.listWithReplyCount(pageRequestDTO);
+//        PageResopneseDTO<BoardListReplyCountDTO> resopneseDTO = boardService.listWithReplyCount(pageRequestDTO);
+
+        PageResopneseDTO<BoardListAllDTO> resopneseDTO = boardService.listWithAll(pageRequestDTO);
 
         log.info("resopneseDTO : " + resopneseDTO);
 

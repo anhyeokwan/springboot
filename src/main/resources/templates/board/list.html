@@ -53,12 +53,17 @@
 
             <tbody th:with="link = ${pageRequestDTO.getLink()}">
             <tr th:each="dto:${resopneseDTO.dtoList}">
-              <th scope="row">[[${dto.bno}]]</th>
+              <th>[[${dto.bno}]]</th>
               <td>
-                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">
+                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
                   [[${dto.title}]]
                 </a>
                 <span class="badge progress-bar-success" style="background-color: #0a53be">[[${dto.replyCount}]]</span>
+
+                <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">
+                  <img style="width: 100px;" th:each="boardImage : ${dto.boardImages}"
+                  th:src="|/views/s_${boardImage.uuid}_${boardImage.fileName}|">
+                </div>
               </td>
 
               <td>
@@ -66,7 +71,7 @@
               </td>
 
               <td>
-                [[${#temporals.format(dto.regDate, 'yyyy-mm-dd')}]]
+                [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]
               </td>
             </tr>
             </tbody>

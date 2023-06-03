@@ -7,14 +7,14 @@ async function uploadToServer(formObj) {
         url: '/upload',
         data: formObj,
         headers: {
-            'Content-Type': 'multipart-form-data'
+            'Content-Type': 'multipart/form-data'
         },
     });
     return respone.data;
 }
 
 async function removeFileToServer(uuid, fileName) {
-    const response = await axios.delete(`/remove/${uuid}_${fileNmae}`);
+    const response = await axios.delete(`/remove/${uuid}_${fileName}`);
 
     return response.data;
 }
