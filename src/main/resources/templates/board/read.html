@@ -60,6 +60,13 @@
           </div>
         </div> <!-- end card-body -->
 
+        <div class="col">
+            <div class="card" th:if="${dto.fileName != null && dto.fileName.size() > 0}">
+              <img class="card-img-top" th:each="fileName : ${dto.fileName}" th:src="|/${fileName}|">
+            </div>
+
+        </div>
+
       </div> <!-- end card -->
     </div> <!-- end col -->
   </div> <!-- end row -->

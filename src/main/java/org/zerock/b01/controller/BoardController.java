@@ -45,6 +45,8 @@ public class BoardController {
     public String registerPOST(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board POST register.......");
 
+        log.info("첨부파일 : " + boardDTO.getFileName());
+
         if (bindingResult.hasErrors()) {
             log.info("has error......");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
