@@ -2,6 +2,9 @@ package org.zerock.b01.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,9 @@ import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
 
 @Controller // 컨트롤러
 @RequestMapping("/board") // 기본 경로 설정
@@ -21,6 +27,8 @@ import javax.validation.Valid;
 @RequiredArgsConstructor // autowired를 생성안하게 해주는 어노테이션
 public class BoardController {
 
+    @Value("${org.zerock.upload.path}") // import 시에 springFramwork으로 시작하는 value
+    private String uploadPath;
     private final BoardService boardService;
 
     @GetMapping("/list")
@@ -97,13 +105,45 @@ public class BoardController {
     }
 
     @PostMapping("/remove")
-    public String remove(long bno, RedirectAttributes redirectAttributes){
-        log.info("remove......" + bno);
+    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes){
+
+        long bno = boardDTO.getBno();
+        log.info("remove post......" + bno);
 
         boardService.remove(bno);
 
+        // 게시물이 데이터베이스상에서 삭제되었다면 첨부파일 삭제
+        log.info(boardDTO.getFileName());
+        List<String> fileNames = boardDTO.getFileName();
+        if (fileNames != null && fileNames.size() > 0) {
+            removeFiles(fileNames);
+        }
         redirectAttributes.addFlashAttribute("result", "remove");
 
         return "redirect:/board/list";
+    }
+
+    public void removeFiles(List<String> files) {
+        for (String fileName : files) {
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+
+            String resouceName = resource.getFilename();
+
+            try {
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+
+                resource.getFile().delete();
+
+                // 썸네일이 존재한다면
+                if (contentType.startsWith("image")) {
+                    File thumnailFile = new File(uploadPath + File.separator + "s_" + fileName);
+
+                    thumnailFile.delete();
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+
+            }
+        } // end for
     }
 }
